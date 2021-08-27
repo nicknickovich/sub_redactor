@@ -5,8 +5,6 @@ import re
 
 
 MIN_TIME = dt.timedelta(0)
-SRT_ZERO_TIME = "00:00:00,000"
-ASS_ZERO_TIME = "0:00:00.00"
 ASS_REGEX = re.compile(
     r"""(Dialogue:\s\d,)
     (\d:\d\d:\d\d\.\d\d),
@@ -137,7 +135,7 @@ def shift_time(timestr, extension):
     timedelta_obj = timestr_to_timedelta(timestr, extension)
     timedelta_obj = timedelta_obj + TIME_DELTA
     if timedelta_obj < MIN_TIME:
-        return SRT_ZERO_TIME if extension == "srt" else ASS_ZERO_TIME
+        raise ValueError("Time cannot be shifted more than to zero")
     hours = timedelta_obj.days * 24 + timedelta_obj.seconds // 3600
     minutes = (timedelta_obj.seconds % 3600) // 60
     seconds = timedelta_obj.seconds % 3600 % 60
@@ -158,8 +156,6 @@ def handle_srt(file_path):
                 start, finish = line.split("-->")
                 start = shift_time(start.strip(), "srt")
                 finish = shift_time(finish.strip(), "srt")
-                if start == SRT_ZERO_TIME:
-                    print(f"time was shifted more than to 0: {file_path}")
                 temp_lines.append(f"{start} --> {finish}\n")
             else:
                 temp_lines.append(line)
@@ -179,8 +175,6 @@ def handle_ass(file_path):
                 start, finish = m.group(2), m.group(3)
                 start = shift_time(start.strip(), "ass")
                 finish = shift_time(finish.strip(), "ass")
-                if start == ASS_ZERO_TIME:
-                    print(f"time was shifted more than to 0: {file_path}")
                 temp_lines.append(
                     f"{m.group(1)}{start},{finish},{m.group(4)}\n"
                 )
