@@ -44,8 +44,25 @@ parser.add_argument(
             are counted.
             First file has number 1."""
 )
+parser.add_argument(
+    "-c", "--no-confirm", action="store_true", dest="no_confirm",
+    help="Proceed without confirmation."
+)
 
 args = parser.parse_args()
+
+confirmation = args.no_confirm
+
+if args.millisec or args.seconds:
+    if not confirmation:
+        answer = input("Are you sure? [Yes/No]\n") or "Yes"
+    while not confirmation:
+        if answer in ("Yes", "yes", "Y", "y"):
+            confirmation = True
+        elif answer in ("No", "no", "N", "n"):
+            parser.exit()
+        else:
+            answer = input("Type Yes or No\n")
 
 
 def timestr_to_timedelta(timestr, extension):
