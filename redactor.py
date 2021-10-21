@@ -115,7 +115,7 @@ def calculate_start_time(file_path):
 
 def display_delta(delta, file_path):
     """Represent timedelta object as a string."""
-    return f"{file_path}: {delta.seconds},{delta.microseconds // 1000} seconds"
+    return f"{file_path}: {delta.seconds},{delta.microseconds // 1000:03} seconds"
 
 
 sub_files = [

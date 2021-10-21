@@ -16,4 +16,5 @@ Options:
 `-l, --line` Shift all lines starting from provided line number in the file. First line has number 1.
 
 `-n, --file-number` Ordinal number of subtitle files that will be modified. Has no connection to the number in filename. Only subtitle files are counted. First file has number 1.
+
 `-c, --no-confirm` Proceed without confirmation.
